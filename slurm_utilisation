@@ -1,0 +1,70 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+slurm_utilisation - Plugin to show cluster utilisation as a percentage
+
+=head1 NOTES
+
+Uses sreport.
+
+=head1 AUTHOR
+
+Modified from code by Rael Garcia Arnes (raelga@gmail.com)
+
+=head1 LICENSE
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License 
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=head1 MAGIC MARKERS
+
+#%# family=auto
+#%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+case $1 in
+    autoconf)
+        echo yes 
+        exit 0
+        ;;
+
+    config)
+		echo graph_title "Utilisation"
+		echo graph_vlabel "Utilisation"
+		echo slurm_utilisation_allocated.label "allocated"
+		echo slurm_utilisation_down.label "down"
+		echo slurm_utilisation_planned_down.label "planned down"
+		echo slurm_utilisation_idle.label "idle"
+		echo slurm_utilisation_reserved.label "reserved"
+		echo graph_category Slurm
+		echo graph_info "Cluster Utilisation"
+        exit 0
+        ;;
+    esac
+
+START=`date -d '2 hours ago' +%Y-%m-%dT%H:%M:%S`
+END=`date -d '1 hour ago' +%Y-%m-%dT%H:%M:%S`
+sreport_out=`sreport -npt Percent cluster Utilization Clusters=$SLURM_CLUSTERS Start=$START End=$END`
+sreport_out=`echo $sreport_out | sed 's/%//g'`
+echo "$sreport_out" | awk -F\| '{print "slurm_utilisation_allocated.value " $2}'
+echo "$sreport_out" | awk -F\| '{print "slurm_utilisation_down.value " $3}'
+echo "$sreport_out" | awk -F\| '{print "slurm_utilisation_planned_down.value " $4}'
+echo "$sreport_out" | awk -F\| '{print "slurm_utilisation_idle.value " $5}'
+echo "$sreport_out" | awk -F\| '{print "slurm_utilisation_reserved.value " $6}'
