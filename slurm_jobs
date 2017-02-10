@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
+export SLURM_CLUSTERS=${0##*slurm_jobs_}
+
 case $1 in
     autoconf)
         echo yes 
@@ -46,8 +48,8 @@ case $1 in
         ;;
 
     config)
-        echo graph_title "Jobs in slurm queue"
-        echo graph_vlabel "Jobs"
+        echo graph_title "${SLURM_CLUSTERS}: Jobs in slurm queue"
+        echo graph_vlabel "${SLURM_CLUSTERS}: Jobs"
 		echo slurm_jobs_pending.label "pending"
 		echo slurm_jobs_running.label "running"
 		echo slurm_jobs_suspended.label "suspended"
@@ -59,7 +61,7 @@ case $1 in
 		echo slurm_jobs_timeout.label "timeout"
 		echo slurm_jobs_node_fail.label "fail"
 		echo graph_category Slurm
-		echo graph_info "Number of jobs enqueued in slurm by status" 
+		echo graph_info "${SLURM_CLUSTERS}: Number of jobs enqueued in slurm by status"
         exit 0
         ;;
     esac

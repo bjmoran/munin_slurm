@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
+export SLURM_CLUSTERS=${0##*slurm_cpus_active_}
+
 case $1 in
     autoconf)
         echo yes 
@@ -46,11 +48,11 @@ case $1 in
         ;;
 
     config)
-		echo graph_title "CPUs in use in slurm queue"
-		echo graph_vlabel "CPUs"
-		echo slurm_cpus.label "CPUs"
+		echo graph_title "${SLURM_CLUSTERS}: CPUs in use in slurm queue"
+		echo graph_vlabel "${SLURM_CLUSTERS}: CPUs"
+		echo slurm_cpus.label "${SLURM_CLUSTERS}: CPUs"
 		echo graph_category Slurm
-		echo graph_info "Number of cpus in use for the jobs enqueued in running state on slurm"
+		echo graph_info "${SLURM_CLUSTERS}: Number of cpus in use for the jobs enqueued in running state on slurm"
         exit 0
         ;;
     esac
