@@ -50,8 +50,6 @@ case $1 in
 		echo graph_vlabel "CPUs"
 		echo slurm_cpus.label "CPUs"
 		echo graph_category Slurm
-		echo slurm_cpus.warning 0
-		echo slurm_cpus.critical 100
 		echo graph_info "Number of cpus in use for the jobs enqueued on slurm"
         exit 0
         ;;
