@@ -48,15 +48,15 @@ case $1 in
         ;;
 
     config)
-		echo graph_title "${SLURM_CLUSTERS}: Utilisation"
-		echo graph_vlabel "${SLURM_CLUSTERS}: Utilisation"
-		echo slurm_utilisation_allocated.label "allocated"
-		echo slurm_utilisation_down.label "down"
-		echo slurm_utilisation_planned_down.label "planned down"
-		echo slurm_utilisation_idle.label "idle"
-		echo slurm_utilisation_reserved.label "reserved"
-		echo graph_category Slurm
-		echo graph_info "${SLURM_CLUSTERS}: Cluster Utilisation"
+        echo graph_title "${SLURM_CLUSTERS}: Utilisation"
+        echo graph_vlabel "${SLURM_CLUSTERS}: Utilisation"
+        echo slurm_utilisation_allocated.label "allocated"
+        echo slurm_utilisation_down.label "down"
+        echo slurm_utilisation_planned_down.label "planned down"
+        echo slurm_utilisation_idle.label "idle"
+        echo slurm_utilisation_reserved.label "reserved"
+        echo graph_category Slurm
+        echo graph_info "${SLURM_CLUSTERS}: Cluster Utilisation"
         exit 0
         ;;
     esac
