@@ -1,0 +1,62 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+slurm_memory - Plugin to measure the memory requested by running slurm jobs
+
+=head1 NOTES
+
+Shows the memory requested by running jobs.
+
+=head1 AUTHOR
+
+Based on code by Rael Garcia Arnes (raelga@gmail.com)
+
+=head1 LICENSE
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License 
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=head1 MAGIC MARKERS
+
+#%# family=auto
+#%# capabilities=autoconf
+
+=cut
+
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+export SLURM_CLUSTERS=${0##*slurm_memory_}
+export PATH=$PATH:/usr/local/slurm/current/sbin:/usr/local/slurm/current/bin
+
+case $1 in
+    autoconf)
+        echo yes 
+        exit 0
+        ;;
+
+    config)
+        echo graph_title "${SLURM_CLUSTERS}: Memory requested by running jobs"
+        echo graph_vlabel "${SLURM_CLUSTERS}: Memory (TB)"
+        echo graph_scale no
+        echo slurm_memory.label "${SLURM_CLUSTERS}: Memory (TB)"
+        echo graph_category Slurm
+        echo graph_info "${SLURM_CLUSTERS}: Memory requested by running jobs"
+        exit 0
+        ;;
+    esac
+
+squeue -o "%m" --noconvert -tR | sed 's/M//' | awk 'BEGIN {s=0} {s+=$1} END {printf "slurm_memory.value  %g\n", s/(1024*1024)}'
