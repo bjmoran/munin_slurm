@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
 export SLURM_CLUSTERS=${0##*slurm_utilisation_}
+export PATH=$PATH:/usr/local/slurm/current/sbin:/usr/local/slurm/current/bin
 
 case $1 in
     autoconf)
